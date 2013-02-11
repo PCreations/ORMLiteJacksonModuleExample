@@ -1,0 +1,8 @@
+<resources>
+
+    <string name="app_name">ORMLiteJacksonModuleExample</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_ormlite_jackson_module_example">ORMLiteJacksonModuleExample</string>
+
+</resources>
