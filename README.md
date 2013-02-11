@@ -476,7 +476,7 @@ public class FooWebService extends WebService{
 	
 }
 </code>
-<pre>
+</pre>
 
 And we're done ! 
 

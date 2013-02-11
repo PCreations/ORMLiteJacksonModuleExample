@@ -115,5 +115,4 @@ public class ORMLiteJacksonModuleExample extends Activity {
     	ws.onResume();
     }
     
-
 }
