@@ -497,6 +497,9 @@ Here is the workflow to deals with RESTRequest in User Interface :
 <code>
 public class ORMLiteJacksonModuleExample extends Activity {
 
+	public final static String GET_USER_REQUEST_ID = "get_user_request_id";
+	public final static String ADD_COMMENT_REQUEST_ID = "add_comment_request_id";
+	
 	private FooWebService ws;
 	private User user;
 	private RESTRequest&lt;User> getUserRequest;
@@ -559,10 +562,11 @@ public class ORMLiteJacksonModuleExample extends Activity {
         RESTDroid.init(getApplicationContext());
         try {
 			ws = (FooWebService) RESTDroid.getInstance().getWebService(FooWebService.class);
+			ws.registerModule(new ORMLiteJacksonModule(DatabaseManager.getInstance().getHelper());
 			
 			/* Initialization of request */
-			getUserRequest = ws.newRequest(User.class);
-			addCommentRequest = ws.newRequest(Comment.class);
+			getUserRequest = ws.createOrGetRequest(GET_USER_REQUEST_ID, User.class);
+			addCommentRequest = ws.newRequest(ADD_COMMENT_REQUEST_ID, Comment.class);
 
 			getUserRequest.addOnStartedRequestListener(getUserRequestStarted);
 			getUserRequest.addOnFailedRequestListener(getUserRequestFailed);
