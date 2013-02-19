@@ -14,19 +14,18 @@ Link them as Library to your Android project and update the android manifest :
 <code>
 &lt;uses-permission android:name="android.permission.INTERNET" />
 &lt;application
+    ...
+    &lt;activity
         ...
-        &lt;activity
-            ...
-        &lt;/activity>
-        &lt;service android:enabled="true" android:name="fr.pcreations.labs.RESTDroid.core.RestService">&lt;/service>
-    &lt;/application>
-&lt;service android:enabled="true" android:name="fr.pcreations.labs.RESTDroid.core.RestService">&lt;/service>
+    &lt;/activity>
+    &lt;service android:enabled="true" android:name="fr.pcreations.labs.RESTDroid.core.RestService">&lt;/service>
+&lt;/application>
 </code>
 </pre>
 
-## Create item classes
+## Create model classes (used as POJO's here)
 
-Now, let's create the Item and Comment class :
+Now, let's create the User and Comment class :
 
 ### User class :
 
@@ -601,6 +600,4 @@ public class ORMLiteJacksonModuleExample extends Activity {
 }
 </code>
 </pre>
-
-I'm agree with you, it's a totally non sense example. The very important things to notice here are the RESTDroid initialization, how to create request and the ws.onPause() and ws.onResume() method.
 
