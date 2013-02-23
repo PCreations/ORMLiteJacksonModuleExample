@@ -15,16 +15,16 @@ public class FooWebService extends WebService{
 		super(context);
 	}
 	
-	public void getUser(RESTRequest<User> r, int userID) {
-		get(r, BASE_URI + "/user/" + userID);
+	public RESTRequest<User> getUser(Class<User> clazz, int userID) {
+		return get(clazz, BASE_URI + "/user/" + userID);
 	}
 	
-	public void addUser(RESTRequest<User> r, User user) {
-		post(r, BASE_URI + "/user/add", user);
+	public RESTRequest<User> addUser(Class<User> clazz, User user) {
+		return post(clazz, BASE_URI + "/user/add", user);
 	}
 	
-	public void postComment(RESTRequest<Comment>, Comment comment) {
-		post(r, BASE_URI + "/comment/add", comment);
+	public RESTRequest<Comment> postComment(Class<Comment>, Comment comment) {
+		return post(r, BASE_URI + "/comment/add", comment);
 	}
 	
 }

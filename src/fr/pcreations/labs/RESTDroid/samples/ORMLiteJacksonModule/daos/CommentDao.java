@@ -5,10 +5,10 @@ import java.sql.SQLException;
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.support.ConnectionSource;
 
-import fr.pcreations.labs.RESTDroid.core.DaoAccess;
+import fr.pcreations.labs.RESTDroid.core.Persistable;
 import fr.pcreations.labs.RESTDroid.samples.ORMLiteJacksonModule.models.Comment;
 
-public class CommentDao extends BaseDaoImpl<Comment, Integer> implements DaoAccess<Comment> {
+public class CommentDao extends BaseDaoImpl<Comment, Integer> implements Persistable<Comment> {
 
 	public CommentDao(ConnectionSource connectionSource)
 		throws SQLException {

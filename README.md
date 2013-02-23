@@ -462,16 +462,16 @@ public class FooWebService extends WebService{
 		super(context);
 	}
 	
-	public void getUser(RESTRequest&lt;User> r, int userID) {
-		get(r, BASE_URI + "/user/" + userID);
+	public RESTRequest&lt;User> getUser(Class&lt;User> clazz, int userID) {
+		return get(clazz, BASE_URI + "/user/" + userID);
 	}
 	
-	public void addUser(RESTRequest&lt;User> r, User user) {
-		post(r, BASE_URI + "/user/add", user);
+	public RESTRequest&lt;User> addUser(Class&lt;User> clazz, User user) {
+		return post(clazz, BASE_URI + "/user/add", user);
 	}
 	
-	public void postComment(RESTRequest&lt;Comment>, Comment comment) {
-		post(r, BASE_URI + "/comment/add", comment);
+	public RESTRequest&lt;Comment> postComment(Class&lt;Comment>, Comment comment) {
+		return post(r, BASE_URI + "/comment/add", comment);
 	}
 	
 }
@@ -488,7 +488,7 @@ RESTDroid provides a simple way to handle request in User Interface via request 
 *	OnFailedRequestListener : triggered when the request has failed
 *	OnFinishedRequestListener : triggered when the request is finished
 
-You can add any listeners as you want for one specific request.
+You can add any listeners as you want for one specific request via RequestListeners class.
 
 Here is the workflow to deals with RESTRequest in User Interface :
 
@@ -502,57 +502,7 @@ public class ORMLiteJacksonModuleExample extends Activity {
 	private User user;
 	private RESTRequest&lt;User> getUserRequest;
 	private RESTRequest&lt;Comment> addCommentRequest;
-	
-	private OnStartedRequestListener getUserRequestStarted = new OnStartedRequestListener() {
-
-		public void onStartedRequest() {
-			Log.i("foo", "getUserRequest has started !");
-		}
 		
-	};
-	
-	private OnStartedRequestListener addCommentRequestStarted = new OnStartedRequestListener() {
-
-		public void onStartedRequest() {
-			Log.i("foo", "addCommentRequest has started !");
-		}
-		
-	};
-	
-	private OnFailedRequestListener getUserRequestFailed = new OnFailedRequestListener() {
-
-		public void onFailedRequest(int resultCode) {
-			Log.e("foo", "Unfortunately getUserRequest failed with result code " + resultCode);
-		}
-		
-	};
-	
-	private OnFailedRequestListener addCommentRequestFailed = new OnFailedRequestListener() {
-
-		public void onFailedRequest(int resultCode) {
-			Log.e("foo", "Unfortunately addCommentRequest failed with result code " + resultCode);
-		}
-		
-	};
-	
-	private OnFinishedRequestListener getUserRequestFinished = new OnFinishedRequestListener() {
-
-		public void onFinishedRequest(int resultCode) {
-			Log.i("foo", "getUserRequest has finished with result code " + resultCode);
-			user = getUserRequest.getResourceRepresentation();
-		}
-		
-	};
-	
-	private OnFinishedRequestListener addCommentRequestFinished = new OnFinishedRequestListener() {
-
-		public void onFinishedRequest(int resultCode) {
-			Log.i("foo", "addCommentRequest has finished with result code " + resultCode);
-		}
-		
-	};
-	
-	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -560,24 +510,11 @@ public class ORMLiteJacksonModuleExample extends Activity {
         RESTDroid.init(getApplicationContext());
         try {
 			ws = (FooWebService) RESTDroid.getInstance().getWebService(FooWebService.class);
-			
-			/* Initialization of request */
-			getUserRequest = ws.newRequest(User.class);
-			addCommentRequest = ws.newRequest(Comment.class);
-
-			getUserRequest.addOnStartedRequestListener(getUserRequestStarted);
-			getUserRequest.addOnFailedRequestListener(getUserRequestFailed);
-			getUserRequest.addOnFinishedRequestListener(getUserRequestFinished);
-			
-			addCommentRequest.addOnStartedRequestListener(addCommentRequestStarted);
-			addCommentRequest.addOnFailedRequestListener(addCommentRequestFailed);
-			addCommentRequest.addOnFinishedRequestListener(addCommentRequestFinished);
-			
-			ws.getUser(getUserRequest, 5); //retrieve from the server the user with id 5
+			getUserRequest = ws.getUser(User.class, 5); //retrieve from the server the user with id 5
 			User fooUser = DatabaseManager.getInstance().getHelper().getUserDao().findById(4); //retrieve the User with id 4 in local database
-			
-			/* This will add comment in local database and add it on the server */
-			ws.postComment(addCommentRequest, new Comment("My first comment", "This is my first comment !", Date.valueOf("2013-02-11"), fooUser));
+			addCommentRequest = ws.postComment(Comment.class, new Comment("My first comment", "This is my first comment !", Date.valueOf("2013-02-11"), fooUser));
+			ws.executeRequest(getUserRequest);
+			ws.executeRequest(addCommentRequest);
 			
 		} catch (RESTDroidNotInitializedException e) {
 			// TODO Auto-generated catch block
@@ -598,9 +535,78 @@ public class ORMLiteJacksonModuleExample extends Activity {
     	ws.onResume();
     }
     
+    public class GetUserRequestListeners extends RequestListeners {
+    	
+    	private OnStartedRequestListener onStarted = new OnStartedRequestListener() {
+
+    		public void onStartedRequest() {
+    			Log.i("foo", "getUserRequest has started !");
+    		}
+    		
+    	};
+    	
+    	private OnFailedRequestListener onFailed = new OnFailedRequestListener() {
+
+    		public void onFailedRequest(int resultCode) {
+    			Log.e("foo", "Unfortunately getUserRequest failed with result code " + resultCode);
+    		}
+    		
+    	};
+    	
+    	private OnFinishedRequestListener onFinished = new OnFinishedRequestListener() {
+
+    		public void onFinishedRequest(int resultCode) {
+    			Log.i("foo", "getUserRequest has finished with result code " + resultCode);
+    			user = getUserRequest.getResourceRepresentation();
+    		}
+    		
+    	};
+    	
+    	public GetUserRequestListeners() {
+    		super();
+    		addOnStartedRequestListener(onStarted);
+    		addOnFailedRequestListener(onFailed);
+    		addOnFinishedRequestListener(onFinished);
+    	}
+    }
+    
+    public class AddCommentRequestListeners extends RequestListeners {
+    	
+    	private OnStartedRequestListener onStarted = new OnStartedRequestListener() {
+
+    		public void onStartedRequest() {
+    			Log.i("foo", "addCommentRequest has started !");
+    		}
+    		
+    	};
+    	
+    	private OnFailedRequestListener onFailed = new OnFailedRequestListener() {
+
+    		public void onFailedRequest(int resultCode) {
+    			Log.e("foo", "Unfortunately addCommentRequest failed with result code " + resultCode);
+    		}
+    		
+    	};
+    	
+    	private OnFinishedRequestListener onFinished = new OnFinishedRequestListener() {
+
+    		public void onFinishedRequest(int resultCode) {
+    			Log.i("foo", "addCommentRequest has finished with result code " + resultCode);
+    		}
+    		
+    	};
+    	
+    	public AddCommentRequestListeners() {
+    		super();
+    		addOnStartedRequestListener(onStarted);
+    		addOnFailedRequestListener(onFailed);
+    		addOnFinishedRequestListener(onFinished);
+    	}
+    }
+    
 }
 </code>
 </pre>
 
-I'm agree with you, it's a totally non sense example. The very important things to notice here are the RESTDroid initialization, how to create request and the ws.onPause() and ws.onResume() method.
+I'm agree with you, it's not a very basic example. The very important things to notice here are the RESTDroid initialization, how to create request and the ws.onPause() and ws.onResume() method.
 

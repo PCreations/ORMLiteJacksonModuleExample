@@ -5,13 +5,13 @@ import java.sql.SQLException;
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.support.ConnectionSource;
 
-import fr.pcreations.labs.RESTDroid.core.DaoAccess;
+import fr.pcreations.labs.RESTDroid.core.Persistable;
 import fr.pcreations.labs.RESTDroid.exceptions.DatabaseManagerNotInitializedException;
 import fr.pcreations.labs.RESTDroid.samples.ORMLiteJacksonModule.database.DatabaseManager;
 import fr.pcreations.labs.RESTDroid.samples.ORMLiteJacksonModule.models.Comment;
 import fr.pcreations.labs.RESTDroid.samples.ORMLiteJacksonModule.models.User;
 
-public class UserDao extends BaseDaoImpl<User, Integer> implements DaoAccess<User>{
+public class UserDao extends BaseDaoImpl<User, Integer> implements Persistable<User>{
 
 	public UserDao(ConnectionSource connectionSource)
 		throws SQLException {
