@@ -23,8 +23,8 @@ public class FooWebService extends WebService{
 		return post(clazz, BASE_URI + "/user/add", user);
 	}
 	
-	public RESTRequest<Comment> postComment(Class<Comment>, Comment comment) {
-		return post(r, BASE_URI + "/comment/add", comment);
+	public RESTRequest<Comment> postComment(Class<Comment> clazz, Comment comment) {
+		return post(clazz, BASE_URI + "/comment/add", comment);
 	}
 	
 }

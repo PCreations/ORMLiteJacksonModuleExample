@@ -470,8 +470,8 @@ public class FooWebService extends WebService{
 		return post(clazz, BASE_URI + "/user/add", user);
 	}
 	
-	public RESTRequest&lt;Comment> postComment(Class&lt;Comment>, Comment comment) {
-		return post(r, BASE_URI + "/comment/add", comment);
+	public RESTRequest&lt;Comment> postComment(Class&lt;Comment> clazz, Comment comment) {
+		return post(clazz, BASE_URI + "/comment/add", comment);
 	}
 	
 }
@@ -513,6 +513,8 @@ public class ORMLiteJacksonModuleExample extends Activity {
 			getUserRequest = ws.getUser(User.class, 5); //retrieve from the server the user with id 5
 			User fooUser = DatabaseManager.getInstance().getHelper().getUserDao().findById(4); //retrieve the User with id 4 in local database
 			addCommentRequest = ws.postComment(Comment.class, new Comment("My first comment", "This is my first comment !", Date.valueOf("2013-02-11"), fooUser));
+			getUserRequest.setRequestListeners(this, GetUserRequestListeners.class);
+			addCommentRequest.setRequestListeners(this, AddCommentRequestListeners.class);
 			ws.executeRequest(getUserRequest);
 			ws.executeRequest(addCommentRequest);
 			
@@ -557,7 +559,7 @@ public class ORMLiteJacksonModuleExample extends Activity {
 
     		public void onFinishedRequest(int resultCode) {
     			Log.i("foo", "getUserRequest has finished with result code " + resultCode);
-    			user = getUserRequest.getResourceRepresentation();
+    			user = (User) mRequest.getResourceRepresentation();
     		}
     		
     	};

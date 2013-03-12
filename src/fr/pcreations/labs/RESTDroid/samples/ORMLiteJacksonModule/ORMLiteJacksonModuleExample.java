@@ -1,6 +1,7 @@
 package fr.pcreations.labs.RESTDroid.samples.ORMLiteJacksonModule;
 
 import java.sql.Date;
+import java.sql.SQLException;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -10,10 +11,8 @@ import com.example.ormlitejacksonmoduleexample.R;
 
 import fr.pcreations.labs.RESTDroid.core.RESTDroid;
 import fr.pcreations.labs.RESTDroid.core.RESTRequest;
-import fr.pcreations.labs.RESTDroid.core.RESTRequest.OnFailedRequestListener;
-import fr.pcreations.labs.RESTDroid.core.RESTRequest.OnFinishedRequestListener;
-import fr.pcreations.labs.RESTDroid.core.RESTRequest.OnStartedRequestListener;
 import fr.pcreations.labs.RESTDroid.core.RequestListeners;
+import fr.pcreations.labs.RESTDroid.exceptions.DatabaseManagerNotInitializedException;
 import fr.pcreations.labs.RESTDroid.exceptions.RESTDroidNotInitializedException;
 import fr.pcreations.labs.RESTDroid.samples.ORMLiteJacksonModule.RESTDroid.FooWebService;
 import fr.pcreations.labs.RESTDroid.samples.ORMLiteJacksonModule.database.DatabaseManager;
@@ -37,10 +36,18 @@ public class ORMLiteJacksonModuleExample extends Activity {
 			getUserRequest = ws.getUser(User.class, 5); //retrieve from the server the user with id 5
 			User fooUser = DatabaseManager.getInstance().getHelper().getUserDao().findById(4); //retrieve the User with id 4 in local database
 			addCommentRequest = ws.postComment(Comment.class, new Comment("My first comment", "This is my first comment !", Date.valueOf("2013-02-11"), fooUser));
+			getUserRequest.setRequestListeners(this, GetUserRequestListeners.class);
+			addCommentRequest.setRequestListeners(this, AddCommentRequestListeners.class);
 			ws.executeRequest(getUserRequest);
 			ws.executeRequest(addCommentRequest);
 			
 		} catch (RESTDroidNotInitializedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DatabaseManagerNotInitializedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -81,7 +88,7 @@ public class ORMLiteJacksonModuleExample extends Activity {
 
     		public void onFinishedRequest(int resultCode) {
     			Log.i("foo", "getUserRequest has finished with result code " + resultCode);
-    			user = getUserRequest.getResourceRepresentation();
+    			user = (User) mRequest.getResourceRepresentation();
     		}
     		
     	};
