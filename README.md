@@ -368,8 +368,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 	public void onCreate(SQLiteDatabase sqliteDatabase, ConnectionSource connectionSource) {
 		int i = 1;
 		try {
-			TableUtils.createTable(connectionSource, Address.class); i++;
-			TableUtils.createTable(connectionSource, Note.class); i++;
+			TableUtils.createTable(connectionSource, Comment.class); i++;
+			TableUtils.createTable(connectionSource, User.class); i++;
 		} catch (SQLException e) {
 			Log.e(DatabaseHelper.class.getName(), "Can't create tables " + i, e);
 		}

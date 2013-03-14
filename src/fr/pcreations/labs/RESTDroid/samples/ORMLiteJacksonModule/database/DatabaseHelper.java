@@ -36,8 +36,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 		int i = 1;
 		try {
 			// Ici on doit mettre toutes les tables de notre base en lui envoyant sa classe associée
-			TableUtils.createTable(connectionSource, Address.class); i++;
-			TableUtils.createTable(connectionSource, Note.class); i++;
+			TableUtils.createTable(connectionSource, Comment.class); i++;
+			TableUtils.createTable(connectionSource, User.class); i++;
 		} catch (SQLException e) {
 			Log.e(DatabaseHelper.class.getName(), "Can't create tables " + i, e);
 		}
