@@ -272,7 +272,7 @@ Database Access Object classes handle the reading and writing a class from the d
 
 <pre>
 <code>
-public class UserDao extends BaseDaoImpl&lt;User, Integer> implements DaoAccess&lt;User>{
+public class UserDao extends BaseDaoImpl&lt;User, Integer> implements Persistable&lt;User>{
 
 	public UserDao(ConnectionSource connectionSource)
 		throws SQLException {
@@ -317,7 +317,7 @@ public class UserDao extends BaseDaoImpl&lt;User, Integer> implements DaoAccess&
 
 <pre>
 <code>
-public class CommentDao extends BaseDaoImpl&lt;Comment, Integer> implements DaoAccess&lt;Comment> {
+public class CommentDao extends BaseDaoImpl&lt;Comment, Integer> implements Persistable&lt;Comment> {
 
 	public CommentDao(ConnectionSource connectionSource)
 		throws SQLException {
